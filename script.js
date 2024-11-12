@@ -26,3 +26,33 @@ function downloadPDF() {
         })
         .save();
 }
+
+document.getElementById("file-upload").addEventListener("change", function(event) {
+    const file = event.target.files[0];
+
+    if (file && file.name.endsWith(".docx")) {
+        // Читаем файл с использованием FileReader
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            // Обрабатываем файл через mammoth.js
+            mammoth.extractRawText({ arrayBuffer: event.target.result })
+                .then(displayText)
+                .catch(handleError);
+        };
+        reader.readAsArrayBuffer(file);
+    } else {
+        alert("Пожалуйста, выберите файл в формате DOCX.");
+    }
+});
+
+function displayText(result) {
+    // Отображаем текст документа в блоке для предпросмотра
+    const previewElement = document.getElementById("document-content");
+    previewElement.innerHTML = `<p>${result.value}</p>`;
+    document.getElementById("preview").style.display = "block";
+}
+
+function handleError(error) {
+    console.error("Ошибка при обработке файла:", error);
+    alert("Произошла ошибка при загрузке файла.");
+}
