@@ -4,28 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Редактируемый договор</title>
-    <!-- Подключаем CSS-стили -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <h2>Загрузите договор и введите данные</h2>
-    <!-- Поле для загрузки файла -->
     <input type="file" id="file-upload" accept=".docx"><br><br>
 
-    <!-- Форма с полями, которые будут заменять токены в шаблоне -->
     <label for="company">Название компании:</label>
     <input type="text" id="company" placeholder="Введите название компании"><br><br>
 
     <label for="client-name">Имя клиента:</label>
     <input type="text" id="client-name" placeholder="Введите имя клиента"><br><br>
 
-    <!-- Блок для предпросмотра договора с обновлениями -->
     <h2>Предпросмотр договора</h2>
     <div id="preview">
         <div id="contract-content">Здесь будет текст договора после загрузки.</div>
     </div>
 
-    <!-- Подключаем скрипты -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.2/mammoth.browser.min.js"></script>
     <script src="script.js"></script>
 </body>
