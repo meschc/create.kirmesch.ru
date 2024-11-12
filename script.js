@@ -1,11 +1,12 @@
-// Слушаем загрузку файла
+// Добавляем прослушиватель на выбор файла
 document.getElementById("file-upload").addEventListener("change", function(event) {
     const file = event.target.files[0];
 
-    // Проверка на формат файла
+    // Проверка формата файла
     if (file && file.name.endsWith(".docx")) {
         const reader = new FileReader();
         reader.onload = function(event) {
+            // Чтение и обработка файла через mammoth
             mammoth.extractRawText({ arrayBuffer: event.target.result })
                 .then(displayContract)
                 .catch(handleError);
@@ -16,35 +17,32 @@ document.getElementById("file-upload").addEventListener("change", function(event
     }
 });
 
-// Функция для отображения текста договора и замены токенов
+// Функция для отображения текста договора
 function displayContract(result) {
-    // Сохраняем текст документа с токенами
-    window.contractTemplate = result.value;
-    // Обновляем текст в блоке предпросмотра
-    updatePreview();
+    window.contractTemplate = result.value; // Сохраняем шаблон текста
+    updatePreview(); // Запуск функции обновления предпросмотра
 }
 
-// Функция для замены токенов в тексте договора и обновления предпросмотра
+// Функция для замены токенов и обновления предпросмотра
 function updatePreview() {
-    // Получаем значения из инпутов
     const companyName = document.getElementById("company").value;
     const clientName = document.getElementById("client-name").value;
 
-    // Копируем шаблон и заменяем токены значениями из инпутов
+    // Подставляем значения из инпутов в текст договора
     let updatedContent = window.contractTemplate || "";
     updatedContent = updatedContent.replace(/\[CompanyName\]/g, companyName);
     updatedContent = updatedContent.replace(/\[ClientName\]/g, clientName);
 
-    // Отображаем обновлённый текст в блоке предпросмотра
-    document.getElementById("contract-content").innerText = updatedContent;
+    // Отображаем обновлённый текст в элементе контракта
+    document.getElementById("contract-content").innerHTML = updatedContent; // Меняем на innerHTML
 }
 
-// Функция для обработки ошибок
+// Обработка ошибок
 function handleError(error) {
     console.error("Ошибка при обработке файла:", error);
     alert("Произошла ошибка при загрузке файла.");
 }
 
-// Слушаем изменения в инпутах и обновляем предпросмотр
+// Добавляем обработчик событий на инпуты
 document.getElementById("company").addEventListener("input", updatePreview);
 document.getElementById("client-name").addEventListener("input", updatePreview);
