@@ -33,8 +33,15 @@ function updatePreview() {
     updatedContent = updatedContent.replace(/\[CompanyName\]/g, companyName);
     updatedContent = updatedContent.replace(/\[ClientName\]/g, clientName);
 
-    // Отображаем обновлённый текст в элементе контракта
-    document.getElementById("contract-content").innerHTML = updatedContent; // Меняем на innerHTML
+    // Находим элемент предпросмотра
+    const previewElement = document.getElementById("contract-content");
+
+    // Проверка на случай отсутствия элемента
+    if (previewElement) {
+        previewElement.innerHTML = updatedContent; // Меняем на innerHTML
+    } else {
+        console.error("Элемент 'contract-content' не найден в DOM.");
+    }
 }
 
 // Обработка ошибок
