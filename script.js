@@ -1,62 +1,50 @@
-function generateContract() {
-    const company = document.getElementById("company").value;
-    const clientName = document.getElementById("client-name").value;
-    const contractDate = document.getElementById("contract-date").value;
-
-    const contractContent = `
-        <p>Договор между ${company} и ${clientName}, заключённый ${contractDate}.</p>
-        <p>Настоящий договор регулирует права и обязанности сторон в соответствии с действующим законодательством.</p>
-        <p>Подробности условий договора будут дополнены по мере необходимости.</p>
-    `;
-
-    document.getElementById("contract-content").innerHTML = contractContent;
-    document.getElementById("output").style.display = "block";
-}
-
-function downloadPDF() {
-    const contractElement = document.getElementById("contract-content");
-
-    html2pdf()
-        .from(contractElement)
-        .set({
-            margin: 1,
-            filename: 'Договор.pdf',
-            html2canvas: { scale: 2 },
-            jsPDF: { orientation: 'portrait' }
-        })
-        .save();
-}
-
+// Слушаем загрузку файла
 document.getElementById("file-upload").addEventListener("change", function(event) {
     const file = event.target.files[0];
-    console.log("Файл выбран:", file);
 
+    // Проверка на формат файла
     if (file && file.name.endsWith(".docx")) {
-        // Читаем файл с использованием FileReader
         const reader = new FileReader();
         reader.onload = function(event) {
-            console.log("Файл загружен. Начинается обработка с помощью mammoth.js...");
-            // Обрабатываем файл через mammoth.js
             mammoth.extractRawText({ arrayBuffer: event.target.result })
-                .then(displayText)
+                .then(displayContract)
                 .catch(handleError);
         };
         reader.readAsArrayBuffer(file);
     } else {
         alert("Пожалуйста, выберите файл в формате DOCX.");
-        console.log("Выбранный файл не поддерживается или отсутствует.");
     }
 });
 
-function displayText(result) {
-    console.log("Текст успешно извлечён:", result.value);
-    // Отображаем текст документа в блоке для предпросмотра
-    const previewElement = document.getElementById("document-content");
-    previewElement.innerHTML = `<p>${result.value}</p>`;
-    document.getElementById("preview").style.display = "block";
+// Функция для отображения текста договора и замены токенов
+function displayContract(result) {
+    // Сохраняем текст документа с токенами
+    window.contractTemplate = result.value;
+    // Обновляем текст в блоке предпросмотра
+    updatePreview();
 }
 
+// Функция для замены токенов в тексте договора и обновления предпросмотра
+function updatePreview() {
+    // Получаем значения из инпутов
+    const companyName = document.getElementById("company").value;
+    const clientName = document.getElementById("client-name").value;
+
+    // Копируем шаблон и заменяем токены значениями из инпутов
+    let updatedContent = window.contractTemplate || "";
+    updatedContent = updatedContent.replace(/\[CompanyName\]/g, companyName);
+    updatedContent = updatedContent.replace(/\[ClientName\]/g, clientName);
+
+    // Отображаем обновлённый текст в блоке предпросмотра
+    document.getElementById("contract-content").innerText = updatedContent;
+}
+
+// Функция для обработки ошибок
 function handleError(error) {
     console.error("Ошибка при обработке файла:", error);
     alert("Произошла ошибка при загрузке файла.");
 }
+
+// Слушаем изменения в инпутах и обновляем предпросмотр
+document.getElementById("company").addEventListener("input", updatePreview);
+document.getElementById("client-name").addEventListener("input", updatePreview);
