@@ -29,11 +29,13 @@ function downloadPDF() {
 
 document.getElementById("file-upload").addEventListener("change", function(event) {
     const file = event.target.files[0];
+    console.log("Файл выбран:", file);
 
     if (file && file.name.endsWith(".docx")) {
         // Читаем файл с использованием FileReader
         const reader = new FileReader();
         reader.onload = function(event) {
+            console.log("Файл загружен. Начинается обработка с помощью mammoth.js...");
             // Обрабатываем файл через mammoth.js
             mammoth.extractRawText({ arrayBuffer: event.target.result })
                 .then(displayText)
@@ -42,10 +44,12 @@ document.getElementById("file-upload").addEventListener("change", function(event
         reader.readAsArrayBuffer(file);
     } else {
         alert("Пожалуйста, выберите файл в формате DOCX.");
+        console.log("Выбранный файл не поддерживается или отсутствует.");
     }
 });
 
 function displayText(result) {
+    console.log("Текст успешно извлечён:", result.value);
     // Отображаем текст документа в блоке для предпросмотра
     const previewElement = document.getElementById("document-content");
     previewElement.innerHTML = `<p>${result.value}</p>`;
