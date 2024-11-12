@@ -1,10 +1,8 @@
-/* Общий стиль для страницы */
 body {
     font-family: Arial, sans-serif;
     margin: 20px;
 }
 
-/* Стиль для блока предпросмотра */
 #preview {
     border: 1px solid #ccc;
     padding: 10px;
@@ -16,7 +14,6 @@ body {
     white-space: pre-wrap;
 }
 
-/* Стили для инпутов */
 input[type="text"] {
     width: 100%;
     padding: 8px;
