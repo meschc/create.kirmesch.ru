@@ -1,3 +1,1 @@
-# create.kirillmeschc.ru
-
-<a href='https://create.kirillmeschc.ru'>create.kirillmeschc.ru</a>
+# <a href='https://create.kirmesch.ru'>create.kirmesch.ru</a>
