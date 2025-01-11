@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Создатель обложек для книг">
+    <meta name="author" content="Кирилл Мещеряков">
+    
+    <title>Создатель обложек</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
+    <meta property="og:image" content="assets/img/thumb.png">
+
+    
+    <!-- Open Graph теги для соцсетей -->
+    <meta property="og:title" content="Создатель обложек">
+    <meta property="og:description" content="Создатель обложек для книг">
+    <meta property="og:type" content="website">
+    
+    <!-- Шрифты (опционально) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=New+York&family=PT+Serif:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'New York', 'PT Serif', serif;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            font-size: 1.5em;
+            font-weight: 700;
+            margin: 0;
+            line-height: 1.2;
+            text-align: left;
+        }
+        .container {
+            max-width: 450px;
+            margin: 1em auto 2em;
+            padding: 20px;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5em;
+        }
+        .subhead {
+            font-size: 1em;
+            font-weight: 400;
+            margin-top: 0.5em;
+        }
+        .header-content {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            max-width: 100%;
+            width: 100%;
+        }
+        #previewContainer {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+            border-radius: 4px 12px 12px 4px;
+            overflow: hidden;
+            width: fit-content;
+            max-width: 100%;
+            margin-top: 1em;
+            margin-bottom: 1em;
+        }
+        #mockupTemplate, #resultCanvas {
+            max-width: 100%;
+            height: auto;
+            vertical-align: top;
+        }
+        .hidden {
+            display: none;
+        }
+        button {
+            height: fit-content;
+            width: 100%;
+            display: flex;
+            padding: 7px 16px 8px 16px;
+            justify-content: center;
+            align-items: center;
+            gap: 4px;
+            border-radius: 0.8em;
+            border: 1px solid #D5D5D5;
+            background-color: #FFFFFF00;
+            color: #000;
+            font-family: inherit;
+            font-size: 1em;
+            text-align: center;
+            font-weight: 400;
+            line-height: 1.5em;
+            transition: 0.2s ease-in-out;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #F8F8F8;
+        }
+        button:active {
+            background-color: #E6E6E6;
+        }
+        .upload-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+            color: white;
+            font-size: 24px;
+        }
+        .upload-overlay:hover {
+            opacity: 1;
+        }
+        .upload-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+        ul {
+            margin: 0;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            gap: 1em;
+        }
+        li {
+            margin-bottom: 0.4em;
+        }
+        .contacts  {
+            display: flex;
+            align-items: center;
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            align-items: baseline;
+        }
+        .contact {
+            display: flex;
+            align-items: baseline;
+            gap: 0.3em;
+        }
+        .version {
+            margin: 0em;
+        }
+        .contacts svg {
+            width: 1em;
+            height: 1em;
+            position: relative;
+            top: 0.125em;
+        }
+        a {
+            color: #2291FF;
+            text-decoration: underline;
+            text-decoration-style: wavy;
+            text-decoration-color: #3498db00;
+            text-underline-offset: 0.1em;
+            transition: 0.2s ease-in-out;
+        }
+        a:hover {
+            text-decoration: underline;
+            text-decoration-style: wavy;
+            text-decoration-color: #2291FF80;
+            text-underline-offset: 0.175em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header-content">
+            <h1>Красивые книжные обложки</h1>
+            <p class="subhead">Создавай красивые обложки для книг. Как в iBooks</p>
+        </div>
+        <div class="contacts">
+            <div class="contact">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-github"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+                <a href="https://github.com/kirillmesh/ibooks-cover-generator">Git</a>
+            </div>
+            <div class="contact">
+                <a href="https://kirmesch.ru"><i>km</i></a>
+            </div>
+            <div class="contact">
+                <p class="version">v1</p>
+            </div>
+    </div>
+        <input type="file" id="coverUpload" accept="image/*" class="hidden">
+        
+        <div id="previewContainer">
+            <object id="mockupTemplate" data="coverMockup.svg" type="image/svg+xml"></object>
+            <canvas id="resultCanvas" class="hidden"></canvas>
+            <div class="upload-overlay">
+                <div class="upload-icon">+</div>
+                <div>Создать обложку</div>
+            </div>
+        </div>
+        <button id="downloadBtn" class="hidden">Скачать готовую обложку</button>
+    </div>
+
+    <script>
+        const scale = 1;
+        const canvas = document.getElementById('resultCanvas');
+        const ctx = canvas.getContext('2d');
+        const mockupTemplate = document.getElementById('mockupTemplate');
+        const fileInput = document.getElementById('coverUpload');
+        const downloadBtn = document.getElementById('downloadBtn');
+
+        function loadSVG() {
+            return new Promise((resolve, reject) => {
+                try {
+                    if (mockupTemplate.contentDocument === null) {
+                        mockupTemplate.addEventListener('load', function() {
+                            convertSVG().then(resolve).catch(reject);
+                        });
+                    } else {
+                        convertSVG().then(resolve).catch(reject);
+                    }
+                } catch (error) {
+                    reject(error);
+                }
+            });
+        }
+
+        function convertSVG() {
+            return new Promise((resolve, reject) => {
+                try {
+                    const svg = mockupTemplate.contentDocument.querySelector('svg');
+                    if (!svg) {
+                        throw new Error('SVG не найден в документе');
+                    }
+
+                    const serializer = new XMLSerializer();
+                    const svgStr = serializer.serializeToString(svg);
+                    const svgBlob = new Blob([svgStr], {type: 'image/svg+xml;charset=utf-8'});
+                    const url = URL.createObjectURL(svgBlob);
+                    
+                    const img = new Image();
+                    img.onload = function() {
+                        URL.revokeObjectURL(url);
+                        resolve(img);
+                    };
+                    img.onerror = function() {
+                        URL.revokeObjectURL(url);
+                        reject(new Error('Ошибка при загрузке SVG'));
+                    };
+                    img.src = url;
+                } catch (error) {
+                    reject(error);
+                }
+            });
+        }
+
+        mockupTemplate.addEventListener('load', async function() {
+            try {
+                const mockupImage = await loadSVG();
+                canvas.width = mockupImage.naturalWidth;
+                canvas.height = mockupImage.naturalHeight;
+            } catch (error) {
+                console.error('Ошибка при загрузке мокапа:', error);
+                alert('Ошибка при загрузке мокапа. Проверьте файл SVG.');
+            }
+        });
+
+        fileInput.addEventListener('change', async function(e) {
+            const file = e.target.files[0];
+            if (!file || !file.type.startsWith('image/')) {
+                alert('Пожалуйста, выберите изображение');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = async function(event) {
+                try {
+                    const coverImg = new Image();
+                    const mockupImage = await loadSVG();
+                    
+                    coverImg.onload = function() {
+                        processImage(coverImg, mockupImage);
+                    };
+                    coverImg.onerror = function() {
+                        alert('Ошибка при загрузке изображения обложки');
+                    };
+                    coverImg.src = event.target.result;
+                } catch (error) {
+                    console.error('Ошибка:', error);
+                    alert('Произошла ошибка при обработке изображения');
+                }
+            };
+            reader.onerror = function() {
+                alert('Ошибка при чтении файла');
+            };
+            reader.readAsDataURL(file);
+        });
+
+        function processImage(coverImg, mockupImage) {
+            // Используем размер загруженного изображения для canvas
+            canvas.width = coverImg.width;
+            canvas.height = coverImg.height;
+            
+            // Очищаем canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Рисуем обложку в оригинальном размере
+            ctx.drawImage(coverImg, 0, 0, canvas.width, canvas.height);
+            
+            // Масштабируем мокап под размер изображения
+            const scaleX = canvas.width / mockupImage.naturalWidth;
+            const scaleY = canvas.height / mockupImage.naturalHeight;
+            const scale = Math.max(scaleX, scaleY);
+            
+            const mockupWidth = mockupImage.naturalWidth * scale;
+            const mockupHeight = mockupImage.naturalHeight * scale;
+            const offsetX = (canvas.width - mockupWidth) / 2;
+            const offsetY = (canvas.height - mockupHeight) / 2;
+            
+            // Накладываем мокап с масштабированием
+            ctx.drawImage(mockupImage, offsetX, offsetY, mockupWidth, mockupHeight);
+
+            // Показываем результат
+            canvas.style.display = 'block';
+            downloadBtn.style.display = 'inline-block';
+            canvas.classList.remove('hidden');
+            mockupTemplate.classList.add('hidden');
+            downloadBtn.classList.remove('hidden');
+        }
+
+        downloadBtn.addEventListener('click', function() {
+            const link = document.createElement('a');
+            link.download = 'book-mockup.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        });
+
+        document.querySelector('.upload-overlay').addEventListener('click', () => fileInput.click());
+    </script>
+</body>
+</html>
