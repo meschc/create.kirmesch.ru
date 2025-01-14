@@ -10,16 +10,16 @@
     <title>Создатель обложек</title>
     
     <!-- Favicon -->
-    <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
-    <meta property="og:image" content="assets/img/thumb.png">
+    <link rel="icon" href="/assets/img/favicon_red.svg" type="image/svg+xml">
+    <meta property="og:image" content="assets/img/thumb_red.png">
 
     
-    <!-- Open Graph теги для соцсетей -->
+    <!-- Open Graph -->
     <meta property="og:title" content="Создатель обложек">
     <meta property="og:description" content="Создатель обложек для книг">
     <meta property="og:type" content="website">
     
-    <!-- Шрифты (опционально) -->
+    <!-- Шрифты -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=New+York&family=PT+Serif:wght@400;700&display=swap" rel="stylesheet">
@@ -72,6 +72,7 @@
         #mockupTemplate, #resultCanvas {
             max-width: 100%;
             height: auto;
+            max-height: 100%;
             vertical-align: top;
         }
         .hidden {
@@ -195,7 +196,7 @@
         <input type="file" id="coverUpload" accept="image/*" class="hidden">
         
         <div id="previewContainer">
-            <object id="mockupTemplate" data="coverMockup.svg" type="image/svg+xml"></object>
+            <object id="mockupTemplate" data="assets/img/coverMockup.svg" type="image/svg+xml"></object>
             <canvas id="resultCanvas" class="hidden"></canvas>
             <div class="upload-overlay">
                 <div class="upload-icon">+</div>
