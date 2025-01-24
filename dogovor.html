@@ -3,10 +3,147 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Главная</title>
+    <title>Предпросмотр договора</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        #preview {
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            padding: 15px;
+            display: none;
+        }
+        input[type="text"], input[type="date"] {
+            margin: 10px 0;
+            padding: 8px;
+            width: 100%;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        #contract-content {
+            line-height: 1.5;
+            font-size: 14px;
+            white-space: pre-wrap;
+        }
+        .highlight {
+            background-color: #2291ff2e;
+            padding: 2px 4px;
+            border-radius: 2px;
+        }
+        /* CSS для разрыва страницы */
+        .page-break {
+            page-break-after: always;
+            clear: both;
+        }
+        /* Медиазапросы для печати */
+        @media print {
+            .page-break {
+                page-break-before: always;  /* Разрыв перед элементом */
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1><a href='https://create.kirmesch.ru/cover'>Генератор обложек</a></h1>
-    <p>Генератор красивых обложек, с помощью него можешь создавать реалистичные обложки как в ibooks.</p>
+
+    <h1>Загрузка и предпросмотр договора</h1>
+
+    <label for="company">Название компании:</label>
+    <input type="text" id="company" placeholder="Введите название компании">
+    
+    <label for="client-name">Имя клиента:</label>
+    <input type="text" id="client-name" placeholder="Введите имя клиента">
+
+    <label for="contract-date">Дата договора:</label>
+    <input type="date" id="contract-date">
+
+    <label for="file-upload">Загрузите файл HTML:</label>
+    <input type="file" id="file-upload" accept=".html">
+    
+    <div id="preview">
+        <h2>Предпросмотр договора:</h2>
+        <div id="contract-content"></div>
+    </div>
+
+    <button id="print-btn" style="display: none;">Скачать как PDF</button>
+
+    <script>
+        document.getElementById("file-upload").addEventListener("change", function(event) {
+            const file = event.target.files[0];
+            if (file && file.name.endsWith(".html")) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const htmlContent = event.target.result;
+                    displayContract(htmlContent);
+                };
+                reader.readAsText(file);
+            } else {
+                alert("Пожалуйста, выберите файл в формате HTML.");
+            }
+        });
+
+        function displayContract(htmlContent) {
+            window.contractTemplate = htmlContent;
+            updatePreview();
+            document.getElementById("print-btn").style.display = "inline-block";
+        }
+
+        function updatePreview() {
+            const companyName = document.getElementById("company").value;
+            const clientName = document.getElementById("client-name").value;
+            const contractDate = document.getElementById("contract-date").value;
+
+            let updatedContent = window.contractTemplate || "";
+            updatedContent = updatedContent.replace(/\[CompanyName\]/g, `<span class="highlight">${companyName}</span>`);
+            updatedContent = updatedContent.replace(/\[ClientName\]/g, `<span class="highlight">${clientName}</span>`);
+            updatedContent = updatedContent.replace(/\[ContractDate\]/g, `<span class="highlight">${contractDate}</span>`);
+
+            const previewElement = document.getElementById("contract-content");
+            if (previewElement) {
+                previewElement.innerHTML = updatedContent;
+                document.getElementById("preview").style.display = "block";
+
+                // Добавляем разрыв страницы после каждого <hr>
+                addPageBreaks();
+            }
+        }
+
+        function addPageBreaks() {
+            const hrElements = document.querySelectorAll('#contract-content hr');
+            hrElements.forEach(function(hr) {
+                const pageBreak = document.createElement('div');
+                pageBreak.classList.add('page-break');
+                hr.parentNode.insertBefore(pageBreak, hr.nextSibling);
+            });
+        }
+
+        document.getElementById("company").addEventListener("input", updatePreview);
+        document.getElementById("client-name").addEventListener("input", updatePreview);
+        document.getElementById("contract-date").addEventListener("input", updatePreview);
+
+        // Создаем iframe для печати
+        document.getElementById("print-btn").addEventListener("click", function() {
+            const iframe = document.createElement("iframe");
+            iframe.style.position = "absolute";
+            iframe.style.width = "0";
+            iframe.style.height = "0";
+            iframe.style.border = "none";
+            document.body.appendChild(iframe);
+
+            const doc = iframe.contentDocument || iframe.contentWindow.document;
+            doc.open();
+            doc.write("<html><head><title>PDF Договора</title></head><body>" + document.getElementById("contract-content").innerHTML + "</body></html>");
+            doc.close();
+
+            iframe.contentWindow.focus();
+            iframe.contentWindow.print();
+            document.body.removeChild(iframe);
+        });
+    </script>
 </body>
 </html>
