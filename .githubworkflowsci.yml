@@ -19,3 +19,7 @@ jobs:
           # Здесь вы можете использовать ваш токен
           echo "Используем токен: $GITHUB_TOKEN"
           # Здесь вы можете добавить команду для запуска вашего скрипта
+
+      - name: Upload file to GitHub
+        run: |
+          curl -H "Authorization: token $GITHUB_TOKEN" -X PUT -d '{"message": "Upload example.png", "content": "BASE64_ENCODED_CONTENT"}' https://api.github.com/repos/mesch/create.kirmesch.ru/contents/assets/covers/example.png
