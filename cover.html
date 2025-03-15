@@ -412,7 +412,7 @@
         // Добавляем проверку админского доступа
         function checkAdminAccess() {
             const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get('key') === 'admin';
+            return urlParams.get('token');
         }
 
         // Показываем админ-панель если есть доступ
@@ -491,6 +491,15 @@
             });
         }
 
+        // Получаем токен из URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('token');
+
+        if (!token) {
+            alert('Для загрузки файлов необходим GitHub токен');
+            return;
+        }
+
         // Функция для загрузки файла на GitHub
         async function uploadToGitHub(file, token) {
             const reader = new FileReader();
@@ -555,13 +564,6 @@
             const progressContainer = document.querySelector('.upload-progress');
             const resultsContainer = document.getElementById('uploadResults');
             
-            // Запрашиваем GitHub токен
-            const token = process.env.GITHUB_TOKEN;
-            if (!token) {
-                alert('Для загрузки файлов необходим GitHub токен');
-                return;
-            }
-
             progressContainer.classList.remove('hidden');
             resultsContainer.innerHTML = '';
             
