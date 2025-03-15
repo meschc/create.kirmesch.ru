@@ -556,7 +556,7 @@
             const resultsContainer = document.getElementById('uploadResults');
             
             // Запрашиваем GitHub токен
-            const token = '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';
+            const token = process.env.GITHUB_TOKEN;
             if (!token) {
                 alert('Для загрузки файлов необходим GitHub токен');
                 return;
