@@ -229,7 +229,7 @@
                 <p class="version">v2</p>
             </div>
     </div>
-        <input type="file" id="coverUpload" accept="image/*" class="hidden">
+        <input type="file" id="coverUpload" class="hidden">
         
         <!-- Добавляем админ-панель -->
         <div id="adminPanel" class="admin-panel hidden">
@@ -262,6 +262,8 @@
         const mockupTemplate = document.getElementById('mockupTemplate');
         const fileInput = document.getElementById('coverUpload');
         const downloadBtn = document.getElementById('downloadBtn');
+
+        let globalToken; // Глобальная переменная для токена
 
         async function loadSVG() {
             console.log("Загрузка SVG...");
@@ -491,14 +493,20 @@
             });
         }
 
-        // Получаем токен из URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const token = urlParams.get('token');
+        function initialize() {
+            // Получаем токен из URL
+            const urlParams = new URLSearchParams(window.location.search);
+            globalToken = urlParams.get('token'); // Сохраняем токен в глобальной переменной
 
-        if (!token) {
-            alert('Для загрузки файлов необходим GitHub токен');
-            return;
+            if (!globalToken) {
+                return;
+            }
+
+            console.log("Токен GitHub:", globalToken);
         }
+
+        // Вызываем функцию инициализации при загрузке страницы
+        document.addEventListener('DOMContentLoaded', initialize);
 
         // Функция для загрузки файла на GitHub
         async function uploadToGitHub(file, token) {
@@ -594,7 +602,7 @@
                     const processedFile = new File([processedBlob], `processed_${file.name}`, { type: 'image/png' });
                     
                     // Загружаем обработанный файл на GitHub
-                    const url = await uploadToGitHub(processedFile, token);
+                    const url = await uploadToGitHub(processedFile, globalToken);
                     
                     processed++;
                     const progress = (processed / files.length) * 100;
