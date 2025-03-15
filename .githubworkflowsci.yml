@@ -1,0 +1,21 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main  # Запускайте этот процесс при каждом пуше в ветку main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # Укажите, на каком окружении будет выполняться процесс
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2  # Шаг для получения кода из репозитория
+
+      - name: Run your script
+        env:
+          GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}  # Используйте ваше имя секрета
+        run: |
+          # Здесь вы можете использовать ваш токен
+          echo "Используем токен: $GITHUB_TOKEN"
+          # Здесь вы можете добавить команду для запуска вашего скрипта
