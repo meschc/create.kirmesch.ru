@@ -609,10 +609,10 @@
                     progressBar.style.width = `${progress}%`;
                     
                     results.push(url);
-                    resultsContainer.innerHTML += `✓ ${url}<br>`;
+                    resultsContainer.innerHTML += `✔︎ ${url}<br>`;
                 } catch (error) {
                     console.error('Ошибка обработки файла:', file.name, error);
-                    resultsContainer.innerHTML += `❌ Ошибка обработки ${file.name}: ${error.message}<br>`;
+                    resultsContainer.innerHTML += `✗ Ошибка обработки ${file.name}: ${error.message}<br>`;
                 }
             }
 
